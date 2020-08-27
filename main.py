@@ -1,11 +1,14 @@
-import modules as mod
+import scannerModule as mod
 import datetime
+import persistenceModule as persist
+import os.path
 
-#fill this dictionary with the various IDs and the corresponding student names.s
-studentID = {
-    "0036000291452": "Teon Morgan"
-}
-
+#fill this dictionary with the various IDs and the corresponding student names.
+if os.path.isfile("Student-ID.json"):
+    studentID = persist.loadFile("Student-ID.json")
+else:
+    print("Please create the Student-ID.json file by running the addAndRemove file.")
+    exit(0)
 #starts up the webcam to stream video
 vs = mod.initializeStream()
 #opens the file for storage

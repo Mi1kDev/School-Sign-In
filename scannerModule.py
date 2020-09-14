@@ -30,8 +30,7 @@ def writeRow(writer, string):
 
 def loop(vs, csv, studentWriter, dictionary):
     found = set()
-
-    print(dictionary)
+    times = []
 
     while True:
         frame = vs.read()
@@ -48,12 +47,11 @@ def loop(vs, csv, studentWriter, dictionary):
             text = "{} ({})".format(barcodeData, barcodeType)
             cv2.putText(frame, text, (x, y - 10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            
             if barcodeData not in found:
                 if barcodeData in dictionary:
-                    writeRow(studentWriter, dictionary[barcodeData])
-                    csv.flush()
                     found.add(barcodeData)
+                    times.append(str(datetime.datetime.now().time()))
+                    print(times)
         
         cv2.imshow("Barcode Scanner", frame)
         key = cv2.waitKey(1) & 0xFF
@@ -61,6 +59,15 @@ def loop(vs, csv, studentWriter, dictionary):
         if key == ord("q"):
             break
 
+    found = list(found)
+    x = 0
+    print(found)
+    print(times)
+    for i in found:
+        if i in dictionary:
+            print(i)
+            studentWriter.writerow([dictionary[i], times[x]])
+        x += 1
     studentWriter.writerow(["Finished Scanning @:" +str(datetime.datetime.now().time())])
     csv.close()
     cv2.destroyAllWindows()
